@@ -1,39 +1,54 @@
 name: Mac mini Refurb Watcher
 
 on:
+  # 15分ごとに自動実行する．
   schedule:
     - cron: "*/15 * * * *"
+  # GitHub画面から手動実行する．test_modeはLINE通知テスト用．
   workflow_dispatch:
+    inputs:
+      test_mode:
+        description: "Send a test LINE notification using fixture HTML"
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
 
 jobs:
   watch:
+    # GitHubが用意するUbuntu環境で監視スクリプトを実行する．
     runs-on: ubuntu-latest
     timeout-minutes: 10
 
     steps:
+      # リポジトリのコードをActions実行環境に取得する．
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
+      # Python 3.12を使える状態にする．
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
           cache: "pip"
 
+      # requirements.txtに書いたPythonライブラリを入れる．
       - name: Install dependencies
         run: pip install -r requirements.txt
 
+      # Secretsを環境変数として渡し，監視スクリプトを実行する．
       - name: Run watcher
         env:
           LINE_CHANNEL_ACCESS_TOKEN: ${{ secrets.LINE_CHANNEL_ACCESS_TOKEN }}
           LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+          WATCHER_TEST_MODE: ${{ inputs.test_mode }}
         run: python src/watcher.py
 
+      # 通知済みJSONが更新された場合だけ，自動コミットして次回の重複通知を防ぐ．
       - name: Commit updated notified items
         run: |
           git config user.name "github-actions[bot]"

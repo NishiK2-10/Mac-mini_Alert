@@ -12,8 +12,11 @@ import requests
 from bs4 import BeautifulSoup, Tag
 from dotenv import load_dotenv
 
+# Appleの整備済Mac miniページと，通知済み商品を保存するローカルJSON．
 TARGET_URL = "https://www.apple.com/jp/shop/refurbished/mac/mac-mini"
 NOTIFIED_ITEMS_PATH = "data/notified_items.json"
+TEST_FIXTURE_PATH = "tests/fixtures/macmini_test_page.html"
+TEST_MODE_ENV = "WATCHER_TEST_MODE"
 REQUEST_TIMEOUT = 30
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; refurb-watcher/1.0)",
@@ -41,12 +44,14 @@ logger = logging.getLogger(__name__)
 
 
 def fetch_page(url: str) -> str:
+    # Appleのページを取得する．HTTPエラーは呼び出し元で処理する．
     response = requests.get(url, headers=HEADERS, timeout=REQUEST_TIMEOUT)
     response.raise_for_status()
     return response.text
 
 
 def extract_from_json_script(html: str) -> list[dict] | None:
+    # Appleページ内の埋め込みJSONから商品データを探す．
     soup = BeautifulSoup(html, "html.parser")
     products: list[dict] = []
     seen_urls: set[str] = set()
@@ -73,6 +78,7 @@ def extract_from_json_script(html: str) -> list[dict] | None:
 
 
 def extract_from_html(html: str) -> list[dict]:
+    # 埋め込みJSONで取れない場合に，HTMLの商品リンク周辺から情報を拾う．
     soup = BeautifulSoup(html, "html.parser")
     products: list[dict] = []
     seen_urls: set[str] = set()
@@ -108,6 +114,7 @@ def extract_from_html(html: str) -> list[dict]:
 
 
 def extract_mac_mini_items(html: str) -> list[dict]:
+    # JSON優先，失敗時はHTMLフォールバックでMac miniだけに正規化する．
     items = extract_from_json_script(html)
     if items is None:
         logger.info("No product data found in JSON scripts. Falling back to HTML parser.")
@@ -141,6 +148,7 @@ def extract_mac_mini_items(html: str) -> list[dict]:
 
 
 def load_notified_items(path: str) -> list[dict]:
+    # 通知済みJSONが壊れていても，監視自体は止めず空リストとして扱う．
     file_path = Path(path)
     if not file_path.exists():
         logger.warning("Notified items file does not exist. Starting with an empty list.")
@@ -161,6 +169,7 @@ def load_notified_items(path: str) -> list[dict]:
 
 
 def save_notified_items(path: str, items: list[dict]) -> None:
+    # 保存する情報は公開商品情報だけに限定し，秘密情報を混ぜない．
     file_path = Path(path)
     file_path.parent.mkdir(parents=True, exist_ok=True)
     sanitized_items = [
@@ -175,13 +184,15 @@ def save_notified_items(path: str, items: list[dict]) -> None:
 
 
 def find_new_items(current: list[dict], notified: list[dict]) -> list[dict]:
+    # URLを重複判定キーにして，未通知の商品だけを返す．
     notified_urls = {str(item.get("url", "")) for item in notified if isinstance(item, dict)}
     return [item for item in current if str(item.get("url", "")) not in notified_urls]
 
 
 def format_message(item: dict) -> str:
-    return (
-        "Apple整備済製品にMac miniが入荷しました。\n\n"
+    # LINEで読みやすいよう，商品情報を固定フォーマットの本文にする．
+    message = (
+        "Apple整備済製品にMac miniが入荷しました．\n\n"
         "商品名：\n"
         f"{item.get('name', '')}\n\n"
         "価格：\n"
@@ -191,9 +202,13 @@ def format_message(item: dict) -> str:
         "検出日時：\n"
         f"{item.get('detected_at', '')}"
     )
+    if item.get("is_test"):
+        return "【テスト通知】これは動作確認用です．実在庫ではありません．\n\n" + message
+    return message
 
 
 def send_line_notification(item: dict, token: str, user_id: str) -> None:
+    # tokenやuser_idはログに出さず，ステータスコードだけを記録する．
     headers = {
         "Authorization": f"Bearer {token}",
         "Content-Type": "application/json",
@@ -228,6 +243,7 @@ def send_line_notification(item: dict, token: str, user_id: str) -> None:
 
 
 def main() -> None:
+    # ローカルでは.env，GitHub ActionsではSecrets由来の環境変数を読む．
     load_dotenv()
 
     token = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
@@ -235,6 +251,10 @@ def main() -> None:
     if not token or not user_id:
         logger.error("Required LINE environment variables are not set.")
         sys.exit(1)
+
+    if is_truthy(os.getenv(TEST_MODE_ENV, "")):
+        run_test_mode(token, user_id)
+        return
 
     try:
         logger.info("Fetching Apple refurbished product page.")
@@ -282,7 +302,45 @@ def main() -> None:
     logger.info("Updated notified items file.")
 
 
+def run_test_mode(token: str, user_id: str) -> None:
+    # 実在庫がなくても，fixtureのHTML解析とLINE送信だけを検証する．
+    logger.info("Running watcher in test mode.")
+
+    try:
+        html = Path(TEST_FIXTURE_PATH).read_text(encoding="utf-8")
+    except OSError as exc:
+        logger.error("Failed to read test fixture: %s", exc)
+        sys.exit(1)
+
+    items = extract_mac_mini_items(html)
+    logger.info("Detected Mac mini items from test fixture: %d", len(items))
+    if not items:
+        logger.error("Test fixture did not produce any Mac mini items.")
+        sys.exit(1)
+
+    test_item = dict(items[0])
+    test_item["is_test"] = True
+    test_item["name"] = f"[テスト] {test_item['name']}"
+
+    try:
+        send_line_notification(test_item, token, user_id)
+    except requests.Timeout:
+        logger.error("LINE API request timed out.")
+        sys.exit(1)
+    except requests.RequestException as exc:
+        logger.error("Failed to send LINE test notification: %s", exc)
+        sys.exit(1)
+
+    logger.info("Test notification sent. Notified items file was not updated.")
+
+
+def is_truthy(value: str) -> bool:
+    # GitHub Actionsのboolean入力は文字列として渡されるため明示的に判定する．
+    return value.strip().lower() in {"1", "true", "yes", "on"}
+
+
 def is_mac_mini(product_name: str) -> bool:
+    # 初期実装では商品名にMac miniを含むかだけで判定する．
     return "Mac mini" in product_name
 
 
@@ -301,6 +359,7 @@ def extract_product_id(url: str) -> str:
 
 
 def _walk_json(value: Any) -> list[dict]:
+    # JSON構造が変わっても拾えるよう，辞書とリストを再帰的に探索する．
     matches: list[dict] = []
     if isinstance(value, dict):
         if _mapping_contains_mac_mini(value):
@@ -321,6 +380,7 @@ def _mapping_contains_mac_mini(mapping: dict) -> bool:
 
 
 def _product_from_mapping(mapping: dict) -> dict | None:
+    # Apple側のキー名変更に備え，複数の候補キーから商品情報を組み立てる．
     name = _first_text_value(
         mapping,
         ("name", "title", "productName", "displayName", "productTitle", "description"),
@@ -369,6 +429,7 @@ def _first_text_value(mapping: dict, keys: tuple[str, ...]) -> str | None:
 
 
 def _first_nested_text_value(value: Any, keys: tuple[str, ...]) -> str | None:
+    # priceやurlが入れ子にあるケースを想定して深掘りする．
     if isinstance(value, dict):
         direct = _first_text_value(value, keys)
         if direct:
@@ -386,6 +447,7 @@ def _first_nested_text_value(value: Any, keys: tuple[str, ...]) -> str | None:
 
 
 def _find_nearby_name(link: Tag) -> str:
+    # リンク文字列が「詳しく見る」だけの場合，親要素の見出しから商品名を探す．
     container = _find_product_container(link)
     if container is None:
         return ""
@@ -400,11 +462,12 @@ def _find_nearby_name(link: Tag) -> str:
     if not is_mac_mini(text):
         return ""
 
-    match = re.search(r"([^。]+Mac mini[^￥]+)", text)
+    match = re.search(r"([^\u3002\uFF0E]+Mac mini[^￥]+)", text)
     return _clean_text(match.group(1)) if match else text
 
 
 def _find_product_container(tag: Tag) -> Tag | None:
+    # 価格や見出しを探すため，商品カードらしい親要素までさかのぼる．
     for parent in tag.parents:
         if not isinstance(parent, Tag):
             continue
