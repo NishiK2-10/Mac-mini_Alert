@@ -1286,5 +1286,12 @@
     "name": "Mac mini [整備済製品] 14コアCPUと20コアGPUを搭載したApple M4 Proチップ、ギガビットEthernet",
     "price": "",
     "detected_at": "2026-09-13T11:22:41+00:00"
+  },
+  {
+    "url": "https://www.apple.com/jp/shop/product/fu9e3j/a/Mac-mini-%E6%95%B4%E5%82%99%E6%B8%88%E8%A3%BD%E5%93%81-10%E3%82%B3%E3%82%A2CPU%E3%81%A810%E3%82%B3%E3%82%A2GPU%E3%82%92%E6%90%AD%E8%BC%89%E3%81%97%E3%81%9FApple-M4%E3%83%81%E3%83%83%E3%83%97%E3%82%AE%E3%82%AC%E3%83%93%E3%83%83%E3%83%88Ethernet?fnode=947a96783f4a76591a665f6d6c868ecb83eee396cf895e8f4b3a90e31bcaf432f742490af70f99fd19d0bf47787d6799997739bfeeacb467d1c3415cdf1b033301d62151c06c6a2b5d232e708db6634c",
+    "product_id": "fu9e3j",
+    "name": "Mac mini [整備済製品] 10コアCPUと10コアGPUを搭載したApple M4チップ、ギガビットEthernet",
+    "price": "",
+    "detected_at": "2026-09-17T04:58:19+00:00"
   }
 ]
