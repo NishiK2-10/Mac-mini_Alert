@@ -1797,5 +1797,26 @@
     "name": "Mac mini [整備済製品] 14コアCPUと20コアGPUを搭載したApple M4 Proチップ、10Gb Ethernet",
     "price": "",
     "detected_at": "2026-09-30T05:22:13+00:00"
+  },
+  {
+    "url": "https://www.apple.com/jp/shop/product/fcyt4j/a/Mac-mini-%E6%95%B4%E5%82%99%E6%B8%88%E8%A3%BD%E5%93%81-10%E3%82%B3%E3%82%A2CPU%E3%81%A810%E3%82%B3%E3%82%A2GPU%E3%82%92%E6%90%AD%E8%BC%89%E3%81%97%E3%81%9FApple-M4%E3%83%81%E3%83%83%E3%83%97%E3%82%AE%E3%82%AC%E3%83%93%E3%83%83%E3%83%88Ethernet?fnode=9ee56857c23e6ee726d2ffacbedfcc22e21225dce7577eca2af0711a65fb40100073112d16ad3054b46369ed8f502a5b871292e488e4831f03c73c46015fbcff6d14f0a03502ae9c242ebd33c3e11dc6",
+    "product_id": "fcyt4j",
+    "name": "Mac mini [整備済製品] 10コアCPUと10コアGPUを搭載したApple M4チップ、ギガビットEthernet",
+    "price": "",
+    "detected_at": "2026-09-30T11:17:51+00:00"
+  },
+  {
+    "url": "https://www.apple.com/jp/shop/product/g1kzqj/a/Mac-mini-%E6%95%B4%E5%82%99%E6%B8%88%E8%A3%BD%E5%93%81-14%E3%82%B3%E3%82%A2CPU%E3%81%A820%E3%82%B3%E3%82%A2GPU%E3%82%92%E6%90%AD%E8%BC%89%E3%81%97%E3%81%9FApple-M4-Pro%E3%83%81%E3%83%83%E3%83%97%E3%82%AE%E3%82%AC%E3%83%93%E3%83%83%E3%83%88Ethernet?fnode=9ee56857c23e6ee726d2ffacbedfcc22e21225dce7577eca2af0711a65fb40100073112d16ad3054b46369ed8f502a5b871292e488e4831f03c73c46015fbcff6d14f0a03502ae9c242ebd33c3e11dc6",
+    "product_id": "g1kzqj",
+    "name": "Mac mini [整備済製品] 14コアCPUと20コアGPUを搭載したApple M4 Proチップ、ギガビットEthernet",
+    "price": "",
+    "detected_at": "2026-09-30T11:17:51+00:00"
+  },
+  {
+    "url": "https://www.apple.com/jp/shop/product/g1jvyj/a/Mac-mini-%E6%95%B4%E5%82%99%E6%B8%88%E8%A3%BD%E5%93%81-14%E3%82%B3%E3%82%A2CPU%E3%81%A820%E3%82%B3%E3%82%A2GPU%E3%82%92%E6%90%AD%E8%BC%89%E3%81%97%E3%81%9FApple-M4-Pro%E3%83%81%E3%83%83%E3%83%9710Gb-Ethernet?fnode=9ee56857c23e6ee726d2ffacbedfcc22e21225dce7577eca2af0711a65fb40100073112d16ad3054b46369ed8f502a5b871292e488e4831f03c73c46015fbcff6d14f0a03502ae9c242ebd33c3e11dc6",
+    "product_id": "g1jvyj",
+    "name": "Mac mini [整備済製品] 14コアCPUと20コアGPUを搭載したApple M4 Proチップ、10Gb Ethernet",
+    "price": "",
+    "detected_at": "2026-09-30T11:17:51+00:00"
   }
 ]
