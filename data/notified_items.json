@@ -3449,5 +3449,26 @@
     "name": "Mac mini [整備済製品] 14コアCPUと20コアGPUを搭載したApple M4 Proチップ、10Gb Ethernet",
     "price": "",
     "detected_at": "2026-11-03T02:21:07+00:00"
+  },
+  {
+    "url": "https://www.apple.com/jp/shop/product/fcyt4j/a/Mac-mini-%E6%95%B4%E5%82%99%E6%B8%88%E8%A3%BD%E5%93%81-10%E3%82%B3%E3%82%A2CPU%E3%81%A810%E3%82%B3%E3%82%A2GPU%E3%82%92%E6%90%AD%E8%BC%89%E3%81%97%E3%81%9FApple-M4%E3%83%81%E3%83%83%E3%83%97%E3%82%AE%E3%82%AC%E3%83%93%E3%83%83%E3%83%88Ethernet?fnode=12090207ba438cddf6cfbc503e9c7c74297027ef47f896c0d6685d86d497531ad06982842fcbaa21f50877cd7659069b4245b0a1cb60dcf73b3bd04fdcff66a835ad4d70868aea41bfe46a79b8dbc678",
+    "product_id": "fcyt4j",
+    "name": "Mac mini [整備済製品] 10コアCPUと10コアGPUを搭載したApple M4チップ、ギガビットEthernet",
+    "price": "",
+    "detected_at": "2026-11-03T09:54:29+00:00"
+  },
+  {
+    "url": "https://www.apple.com/jp/shop/product/g1jvkj/a/Mac-mini-%E6%95%B4%E5%82%99%E6%B8%88%E8%A3%BD%E5%93%81-14%E3%82%B3%E3%82%A2CPU%E3%81%A820%E3%82%B3%E3%82%A2GPU%E3%82%92%E6%90%AD%E8%BC%89%E3%81%97%E3%81%9FApple-M4-Pro%E3%83%81%E3%83%83%E3%83%9710Gb-Ethernet?fnode=12090207ba438cddf6cfbc503e9c7c74297027ef47f896c0d6685d86d497531ad06982842fcbaa21f50877cd7659069b4245b0a1cb60dcf73b3bd04fdcff66a835ad4d70868aea41bfe46a79b8dbc678",
+    "product_id": "g1jvkj",
+    "name": "Mac mini [整備済製品] 14コアCPUと20コアGPUを搭載したApple M4 Proチップ、10Gb Ethernet",
+    "price": "",
+    "detected_at": "2026-11-03T09:54:29+00:00"
+  },
+  {
+    "url": "https://www.apple.com/jp/shop/product/g1jvyj/a/Mac-mini-%E6%95%B4%E5%82%99%E6%B8%88%E8%A3%BD%E5%93%81-14%E3%82%B3%E3%82%A2CPU%E3%81%A820%E3%82%B3%E3%82%A2GPU%E3%82%92%E6%90%AD%E8%BC%89%E3%81%97%E3%81%9FApple-M4-Pro%E3%83%81%E3%83%83%E3%83%9710Gb-Ethernet?fnode=12090207ba438cddf6cfbc503e9c7c74297027ef47f896c0d6685d86d497531ad06982842fcbaa21f50877cd7659069b4245b0a1cb60dcf73b3bd04fdcff66a835ad4d70868aea41bfe46a79b8dbc678",
+    "product_id": "g1jvyj",
+    "name": "Mac mini [整備済製品] 14コアCPUと20コアGPUを搭載したApple M4 Proチップ、10Gb Ethernet",
+    "price": "",
+    "detected_at": "2026-11-03T09:54:29+00:00"
   }
 ]
